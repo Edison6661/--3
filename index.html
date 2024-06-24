@@ -113,8 +113,8 @@
                         outputContainer.appendChild(pElement);
                     });
 
-                    // Extracting all images (img) and displaying them
-                    const images = doc.querySelectorAll('img');
+                    // Extracting images with src that starts with 'http'
+                    const images = doc.querySelectorAll('img[src^="http"]');
                     images.forEach(image => {
                         const imgElement = document.createElement('img');
                         imgElement.src = image.src;

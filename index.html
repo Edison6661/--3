@@ -97,16 +97,24 @@
                     const outputContainer = document.getElementById('outputContainer');
                     outputContainer.innerHTML = ''; // Clear previous results
 
-                    // Extracting div elements with class
-                    const divElements = doc.querySelectorAll('div[class]');
-                    divElements.forEach(div => {
-                        const divElement = document.createElement('div');
-                        divElement.innerHTML = div.innerHTML;
-                        outputContainer.appendChild(divElement);
+                    // Extracting the first header (h1, h2, h3)
+                    const header = doc.querySelector('h1, h2, h3');
+                    if (header) {
+                        const headerElement = document.createElement('h2');
+                        headerElement.textContent = header.textContent;
+                        outputContainer.appendChild(headerElement);
+                    }
+
+                    // Extracting paragraphs (p) excluding those with links
+                    const paragraphs = doc.querySelectorAll('p:not(:has(a))');
+                    paragraphs.forEach(paragraph => {
+                        const pElement = document.createElement('p');
+                        pElement.textContent = paragraph.textContent;
+                        outputContainer.appendChild(pElement);
                     });
 
-                    // Extracting images without links
-                    const images = doc.querySelectorAll('img:not([src^="http"])');
+                    // Extracting all images (img) and displaying them
+                    const images = doc.querySelectorAll('img');
                     images.forEach(image => {
                         const imgElement = document.createElement('img');
                         imgElement.src = image.src;

@@ -97,24 +97,16 @@
                     const outputContainer = document.getElementById('outputContainer');
                     outputContainer.innerHTML = ''; // Clear previous results
 
-                    // Extracting the first header (h1, h2, h3)
-                    const header = doc.querySelector('h1, h2, h3');
-                    if (header) {
-                        const headerElement = document.createElement('h2');
-                        headerElement.textContent = header.textContent;
-                        outputContainer.appendChild(headerElement);
+                    // Extracting main article content
+                    const articleBody = doc.querySelector('.item-page [itemprop="articleBody"]');
+                    if (articleBody) {
+                        const articleContent = document.createElement('div');
+                        articleContent.innerHTML = articleBody.innerHTML;
+                        outputContainer.appendChild(articleContent);
                     }
 
-                    // Extracting paragraphs (p) excluding those with links
-                    const paragraphs = doc.querySelectorAll('p:not(:has(a))');
-                    paragraphs.forEach(paragraph => {
-                        const pElement = document.createElement('p');
-                        pElement.textContent = paragraph.textContent;
-                        outputContainer.appendChild(pElement);
-                    });
-
-                    // Extracting images with src that starts with 'http'
-                    const images = doc.querySelectorAll('img[src^="http"]');
+                    // Extracting images without links
+                    const images = doc.querySelectorAll('.item-page img:not([src^="http"])');
                     images.forEach(image => {
                         const imgElement = document.createElement('img');
                         imgElement.src = image.src;

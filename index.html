@@ -97,16 +97,24 @@
                     const outputContainer = document.getElementById('outputContainer');
                     outputContainer.innerHTML = ''; // Clear previous results
 
-                    // Example: Extracting specific elements like paragraphs
-                    const paragraphs = doc.querySelectorAll('.item-page p');
-                    paragraphs.forEach(paragraph => {
-                        const pElement = document.createElement('p');
-                        pElement.textContent = paragraph.textContent;
-                        outputContainer.appendChild(pElement);
+                    // Extracting main article content
+                    const articleBody = doc.querySelector('.item-page [itemprop="articleBody"]');
+                    if (articleBody) {
+                        const articleContent = document.createElement('div');
+                        articleContent.innerHTML = articleBody.innerHTML;
+                        outputContainer.appendChild(articleContent);
+                    }
+
+                    // Extracting headers (h1, h2, h3, etc.)
+                    const headers = doc.querySelectorAll('.item-page h1, .item-page h2, .item-page h3, .item-page h4, .item-page h5, .item-page h6');
+                    headers.forEach(header => {
+                        const headerElement = document.createElement(header.tagName.toLowerCase());
+                        headerElement.textContent = header.textContent;
+                        outputContainer.appendChild(headerElement);
                     });
 
-                    // Example: Extracting images
-                    const images = doc.querySelectorAll('.item-page img');
+                    // Extracting images without links
+                    const images = doc.querySelectorAll('.item-page img:not([src^="http"])');
                     images.forEach(image => {
                         const imgElement = document.createElement('img');
                         imgElement.src = image.src;

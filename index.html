@@ -97,7 +97,7 @@
                     const outputContainer = document.getElementById('outputContainer');
                     outputContainer.innerHTML = ''; // Clear previous results
 
-                    // Extracting main article content
+                    // Extract and display main article content
                     const articleBody = doc.querySelector('.item-page [itemprop="articleBody"]');
                     if (articleBody) {
                         const articleContent = document.createElement('div');
@@ -105,15 +105,15 @@
                         outputContainer.appendChild(articleContent);
                     }
 
-                    // Extracting headers (h1, h2, h3, etc.)
-                    const headers = doc.querySelectorAll('.item-page h1, .item-page h2, .item-page h3, .item-page h4, .item-page h5, .item-page h6');
+                    // Extract and display headers (h1, h2, h3, etc.)
+                    const headers = doc.querySelectorAll('.item-page h1, .item-page h2, .item-page h3');
                     headers.forEach(header => {
                         const headerElement = document.createElement(header.tagName.toLowerCase());
                         headerElement.textContent = header.textContent;
                         outputContainer.appendChild(headerElement);
                     });
 
-                    // Extracting images without links
+                    // Extract and display images without links
                     const images = doc.querySelectorAll('.item-page img:not([src^="http"])');
                     images.forEach(image => {
                         const imgElement = document.createElement('img');

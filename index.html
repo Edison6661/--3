@@ -82,22 +82,25 @@
         document.getElementById('scrapeButton').addEventListener('click', () => {
             const url = document.getElementById('urlInput').value;
 
+            // Використання fetch для отримання даних з введеного URL через проксі-сервер allorigins.win
             fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`)
                 .then(response => {
+                    // Перевірка на помилки мережі
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    const htmlContent = data.contents;
+                    const htmlContent = data.contents; // Отримання HTML-контенту зі сторінки
                     const parser = new DOMParser();
+                    // Парсинг отриманого HTML-контенту
                     const doc = parser.parseFromString(htmlContent, 'text/html');
 
                     const outputContainer = document.getElementById('outputContainer');
-                    outputContainer.innerHTML = ''; // Clear previous results
+                    outputContainer.innerHTML = ''; // Очищення попередніх результатів
 
-                    // Extract and display main article content
+                    // Витягнення та відображення основного контенту статті
                     const articleBody = doc.querySelector('.item-page [itemprop="articleBody"]');
                     if (articleBody) {
                         const articleContent = document.createElement('div');
@@ -105,7 +108,7 @@
                         outputContainer.appendChild(articleContent);
                     }
 
-                    // Extract and display headers (h1, h2, h3, etc.)
+                    // Витягнення та відображення заголовків (h1, h2, h3)
                     const headers = doc.querySelectorAll('.item-page h1, .item-page h2, .item-page h3');
                     headers.forEach(header => {
                         const headerElement = document.createElement(header.tagName.toLowerCase());
@@ -113,7 +116,7 @@
                         outputContainer.appendChild(headerElement);
                     });
 
-                    // Extract and display images without links
+                    // Витягнення та відображення зображень, що не містять абсолютні посилання
                     const images = doc.querySelectorAll('.item-page img:not([src^="http"])');
                     images.forEach(image => {
                         const imgElement = document.createElement('img');
@@ -127,9 +130,9 @@
                     });
                 })
                 .catch(error => {
-                    console.error('Error fetching data:', error);
+                    console.error('Error fetching data:', error); // Виведення помилки у консоль
                     const outputContainer = document.getElementById('outputContainer');
-                    outputContainer.innerHTML = '<p>Error fetching data. Please try again.</p>';
+                    outputContainer.innerHTML = '<p>Error fetching data. Please try again.</p>'; // Відображення повідомлення про помилку
                 });
         });
     </script>

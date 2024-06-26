@@ -116,6 +116,14 @@
                         outputContainer.appendChild(headerElement);
                     });
 
+                    // Витягнення та відображення заголовків з елементів component__before
+                    const specialHeaders = doc.querySelectorAll('.component__before h1');
+                    specialHeaders.forEach(header => {
+                        const headerElement = document.createElement('h1');
+                        headerElement.textContent = header.textContent;
+                        outputContainer.appendChild(headerElement);
+                    });
+
                     // Витягнення та відображення зображень, що не містять абсолютні посилання
                     const images = doc.querySelectorAll('.item-page img:not([src^="http"])');
                     images.forEach(image => {

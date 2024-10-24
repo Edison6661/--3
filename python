@@ -1,0 +1,12 @@
+### 3. Файл `user.py`
+
+Створіть файл `user.py` для визначення класу `User`:
+
+```python
+class User:
+    def __init__(self, username, password, is_admin=False, is_locked=False, password_restrictions=False):
+        self.username = username
+        self.password = password
+        self.is_admin = is_admin
+        self.is_locked = is_locked
+        self.password_restrictions = password_restrictions

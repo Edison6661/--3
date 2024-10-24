@@ -1,0 +1,81 @@
+from user_manager import UserManager
+
+def password_restriction_check(password):
+    has_upper = any(c.isupper() for c in password)
+    has_lower = any(c.islower() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    return has_upper and has_lower and has_digit
+
+def main():
+    filename = 'users.json'
+    user_manager = UserManager(filename)
+
+    # Додавання адміністратора (якщо файл не існує)
+    if not os.path.exists(filename):
+        user_manager.add_user('ADMIN', '')  # Адміністратор з порожнім паролем
+        user_manager.users['ADMIN'].is_admin = True
+        user_manager.save_users()
+
+    # Головний цикл програми
+    while True:
+        username = input("Введіть ім'я користувача: ")
+        user = user_manager.get_user(username)
+
+        if user is None:
+            print("Користувача не знайдено. Спробуйте ще раз.")
+            continue
+
+        password_attempts = 0
+        while password_attempts < 3:
+            password = input("Введіть пароль: ")
+            if user.password == password:
+                if user.is_locked:
+                    print("Обліковий запис заблоковано.")
+                    break
+
+                if user.is_admin:
+                    while True:
+                        print("\n1. Змінити пароль")
+                        print("2. Додати нового користувача")
+                        print("3. Блокувати користувача")
+                        print("4. Вихід")
+                        choice = input("Оберіть дію: ")
+
+                        if choice == '1':
+                            old_password = input("Введіть старий пароль: ")
+                            if user_manager.change_password(username, old_password, new_password := input("Введіть новий пароль: ")):
+                                while True:
+                                    confirm = input("Підтвердіть новий пароль: ")
+                                    if confirm == new_password:
+                                        print("Пароль змінено!")
+                                        break
+                                    print("Паролі не збігаються.")
+                            else:
+                                print("Невірний старий пароль.")
+                        elif choice == '2':
+                            new_username = input("Введіть ім'я нового користувача: ")
+                            user_manager.add_user(new_username, '')
+                            print("Користувача додано.")
+                        elif choice == '3':
+                            user_to_block = input("Введіть ім'я користувача для блокування: ")
+                            user_manager.block_user(user_to_block)
+                            print("Користувача заблоковано.")
+                        elif choice == '4':
+                            exit()
+                else:
+                    new_password = input("Введіть новий пароль: ")
+                    if (not user.password_restrictions or password_restriction_check(new_password)):
+                        user_manager.change_password(username, user.password, new_password)
+                        print("Пароль змінено!")
+                    else:
+                        print("Пароль не відповідає вимогам.")
+                break
+            else:
+                password_attempts += 1
+                print("Невірний пароль.")
+        
+        if password_attempts == 3:
+            print("Спробуйте пізніше.")
+
+if __name__ == "__main__":
+    main()
